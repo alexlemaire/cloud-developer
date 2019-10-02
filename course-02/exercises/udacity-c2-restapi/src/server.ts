@@ -20,7 +20,7 @@ import { V0MODELS } from './controllers/v0/model.index';
   //CORS Should be restricted
   app.use(function(req, res, next) {
     if (req.headers.origin === 'http://localhost:8080/api/v0' || 'http://udagram-lemaire-dev-dev.eu-central-1.elasticbeanstalk.com/api/v0' || 'http://udagram-lemaire.eu-central-1.elasticbeanstalk.com/api/v0') {
-      res.header("Access-Control-Allow-Origin", req.headers.origin);
+      res.header("Access-Control-Allow-Origin", `${req.headers.origin}`);
     }
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
     next();
