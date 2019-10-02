@@ -16,32 +16,65 @@ router.get('/', async (req: Request, res: Response) => {
     res.send(items);
 });
 
-//@TODO
-//Add an endpoint to GET a specific resource by Primary Key
+// Get a specific resource
+router.get('/:id',
+    async (req: Request, res: Response) => {
+    let { id } = req.params;
+    const item = await FeedItem.findByPk(id);
+    if (!item) {
+      res.status(404).send({message: 'No feed for this id'})
+    } else {
+      res.status(200).send(item);
+    }
+});
 
 // update a specific resource
-router.patch('/:id', 
-    requireAuth, 
+router.patch('/:id',
+    requireAuth,
     async (req: Request, res: Response) => {
-        //@TODO try it yourself
-        res.send(500).send("not implemented")
+        const { id } = req.params
+        const { caption, url } = req.body
+
+        // check Caption is valid
+        if (!caption) {
+            return res.status(400).send({ message: 'Caption is required or malformed' });
+        }
+
+        // check Filename is valid
+        if (!url) {
+            return res.status(400).send({ message: 'File url is required' });
+        }
+
+        FeedItem.update(
+          {
+            caption: caption,
+            url: url
+          },
+          { where: { id: id } }
+        )
+          .then(result =>
+            result[0] === 1 ? res.status(201).send({message: 'feed updated'}) : res.status(404).send({message: 'No feed for this id'})
+          )
+          .catch(err =>
+            res.status(500).send({message: err})
+          )
 });
 
 
 // Get a signed url to put a new item in the bucket
-router.get('/signed-url/:fileName', 
-    requireAuth, 
+router.get('/signed-url/:fileName',
+    requireAuth,
     async (req: Request, res: Response) => {
     let { fileName } = req.params;
     const url = AWS.getPutSignedUrl(fileName);
     res.status(201).send({url: url});
 });
 
-// Post meta data and the filename after a file is uploaded 
+// Post meta data and the filename after a file is uploaded
 // NOTE the file name is they key name in the s3 bucket.
 // body : {caption: string, fileName: string};
-router.post('/', 
-    requireAuth, 
+router.post('/',
+    requireAuth,
     async (req: Request, res: Response) => {
     const caption = req.body.caption;
     const fileName = req.body.url;

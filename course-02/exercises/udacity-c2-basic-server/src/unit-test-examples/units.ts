@@ -15,3 +15,6 @@ export const divide = (a: number, b: number) => {
 // it should return one string combining the two strings.
 // it should throw an error if either of the strings are empty.
 // ensure your function is exported.
+
+// @NOTE
+// done locally and erased the folder while cloning the main repo (not forking) for RestAPI/Frontend so lost any code related to this

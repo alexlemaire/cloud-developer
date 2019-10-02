@@ -1,5 +1,6 @@
 import express from 'express';
 import { sequelize } from './sequelize';
+import { config } from './config/config';
 
 import { IndexRouter } from './controllers/v0/index.router';
 
@@ -13,12 +14,14 @@ import { V0MODELS } from './controllers/v0/model.index';
 
   const app = express();
   const port = process.env.PORT || 8080; // default port to listen
-  
+
   app.use(bodyParser.json());
 
   //CORS Should be restricted
   app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "http://localhost:8100");
+    if (req.headers.origin === 'http://localhost:8080/api/v0' || 'http://udagram-lemaire-dev-dev.eu-central-1.elasticbeanstalk.com/api/v0' || 'http://udagram-lemaire.eu-central-1.elasticbeanstalk.com/api/v0') {
+      res.header("Access-Control-Allow-Origin", req.headers.origin);
+    }
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
     next();
   });
@@ -29,7 +32,7 @@ import { V0MODELS } from './controllers/v0/model.index';
   app.get( "/", async ( req, res ) => {
     res.send( "/api/v0/" );
   } );
-  
+
 
   // Start the Server
   app.listen( port, () => {
