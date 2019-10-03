@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Router, Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import {filterImageFromURL, deleteLocalFiles} from './util/util';
 import validator from 'validator';
@@ -15,7 +15,7 @@ import validator from 'validator';
   app.use(bodyParser.json());
 
   //filter image endpoint
-  app.get('/filteredimage', async (req: Request, res: Response) => {
+  app.get('/filteredimage', async (req: Request, res: Response, next) => {
     const imageUrl = req.query.image_url
     if (!imageUrl) {
       return res.status(400).send({"message": "No URL was specified in the query string"})
@@ -24,7 +24,6 @@ import validator from 'validator';
       return res.status(400).send({"message": "Invalid URL"})
     }
     const authorizedExtensions = ['jpg', 'jpeg', 'svg', 'png', 'bmp', 'gif']
-    console.log(imageUrl.split('.')[imageUrl.split('.').length - 1])
     if (!authorizedExtensions.includes(imageUrl.split('.')[imageUrl.split('.').length - 1])) {
       return res.status(400).send({"message": "Not an image or extension missing"})
     }
