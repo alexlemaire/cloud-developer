@@ -28,7 +28,9 @@
     "typescript": "^3.5.3"
   },
   "dependencies": {
+    "@types/validator": "^10.11.3",
     "express": "^4.17.1",
-    "jimp": "^0.6.4"
+    "jimp": "^0.6.4",
+    "validator": "^11.1.0"
   }
 }
