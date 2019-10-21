@@ -27,7 +27,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
 
   const imageId = uuid.v4()
   const parsedBody = JSON.parse(event.body)
-  const timestamp = new Date()
+  const timestamp = JSON.stringify(new Date())
 
   const newImage = {
     groupId,
